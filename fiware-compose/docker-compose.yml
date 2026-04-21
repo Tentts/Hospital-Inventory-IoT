@@ -1,0 +1,354 @@
+version: "3.7"
+services:
+
+##################### COMPONENTES SEGURIDAD #####################
+
+    # Gestor de identidad (Keyrock)
+    fiware-keyrock:
+        image: fiware/idm:7.8.2
+        container_name: fiware-keyrock
+        volumes:
+            - ../TLS/keyrock/certs:/opt/fiware-idm/certs   
+        depends_on:
+            - mysql-db
+ #           - fiware-authzforce
+        ports:
+            #- 3000:3000
+            #- 3005:3005
+            - 3443:443
+        environment:
+            - DEBUG=idm:*
+            - IDM_DB_HOST=mysql-db
+            - IDM_HOST=https://localhost 
+            - IDM_PORT=3443 
+            - IDM_HTTPS_ENABLED=true
+            - IDM_CORS_ENABLED=true
+            - IDM_DB_USER=root
+            - IDM_DB_PASS=scopass
+            - IDM_ADMIN_USER=admin
+            - IDM_ADMIN_EMAIL=admin@sco.com
+            - IDM_ADMIN_PASS=scopass
+            - IDM_PDP_LEVEL=basic   # advanced, con authzforce
+            - IDM_AUTHZFORCE_ENABLED=false  
+            # - IDM_AUTHZFORCE_HOST=fiware-authzforce
+            # - IDM_AUTHZFORCE_PORT=8080
+        networks:
+            main:
+                ipv4_address: 172.40.0.7
+            mysql:
+        restart: always
+
+    # Punto de refuerzo (PEP Proxy Wilma)
+    pep-orion-northbound:
+        image: fiware/pep-proxy:7.8.2
+        container_name: pep-orion-northbound
+        volumes:
+            - ../TLS/pep-orion-northbound/certs:/opt/fiware-pep-proxy/cert
+        depends_on:
+            - fiware-orion
+            - fiware-keyrock
+#            - fiware-authzforce
+        ports:
+            - 8050:8050
+        expose:
+            - 8050
+        environment:
+            - DEBUG=pep-proxy:*
+            - PEP_PROXY_PORT=8050
+            - PEP_PROXY_HTTPS_ENABLED=true
+            - PEP_PROXY_HTTPS_PORT=8050
+            - PEP_PROXY_AUTH_ENABLED=true 
+            - PEP_PROXY_IDM_HOST=fiware-keyrock
+            - PEP_PROXY_IDM_PORT=443
+            - PEP_PROXY_IDM_SSL_ENABLED=true
+            - PEP_PROXY_APP_HOST=fiware-orion
+            - PEP_PROXY_APP_PORT=1026
+            - PEP_PROXY_APP_SSL_ENABLED=false   # Orion no tiene
+            - PEP_PROXY_APP_ID=2d80c50e-a862-454e-98c7-5460cc5c45f9
+            - PEP_PROXY_USERNAME=pep_proxy_9b2a1251-2bd2-46ee-aa8a-6329951b3f10
+            - PEP_PASSWORD=pep_proxy_4f8ec5d8-d412-43c4-9911-5ea8ad9d2fb4
+            - PEP_PROXY_PDP=idm   
+            # - PEP_PROXY_AZF_PROTOCOL=http
+            # - PEP_PROXY_AZF_HOST=fiware-authzforce 
+            # - PEP_PROXY_PUBLIC_PATHS=/swagger,/swagger/*
+            # - PEP_PROXY_AZF_PORT=8080
+            - PEP_PROXY_MAGIC_KEY=sco 
+        networks:
+            main:
+                ipv4_address: 172.40.0.9
+        restart: always
+
+    pep-iot-agent:
+        image: fiware/pep-proxy:7.8.2
+        container_name: pep-iot-agent
+        volumes:
+            - ../TLS/pep-iot-agent/certs:/opt/fiware-pep-proxy/cert
+        depends_on:
+            - iot-agent
+            - fiware-keyrock
+#            - fiware-authzforce
+        ports:
+            - 8051:8051
+        expose:
+            - 8051
+        environment:
+            - DEBUG=pep-proxy:*
+            - PEP_PROXY_PORT=8051
+            - PEP_PROXY_HTTPS_ENABLED=true
+            - PEP_PROXY_HTTPS_PORT=8051
+            - PEP_PROXY_AUTH_ENABLED=true 
+            - PEP_PROXY_IDM_HOST=fiware-keyrock
+            - PEP_PROXY_IDM_PORT=443
+            - PEP_PROXY_IDM_SSL_ENABLED=true
+            - PEP_PROXY_APP_HOST=iot-agent
+            - PEP_PROXY_APP_PORT=4041 # Puerto del servicio a proteger
+            - PEP_PROXY_APP_SSL_ENABLED=false   
+            - PEP_PROXY_APP_ID=6f6d1104-5e9f-4ca2-8af8-3c0520bfb169
+            - PEP_PROXY_USERNAME=pep_proxy_bab216a9-ad8d-4700-9ade-477ea7b2be84
+            - PEP_PASSWORD=pep_proxy_649cbc54-fb38-4714-9348-4ee9b382e36a
+            - PEP_PROXY_PDP=idm
+            # - PEP_PROXY_AZF_PROTOCOL=http
+            # - PEP_PROXY_AZF_HOST=fiware-authzforce 
+            # - PEP_PROXY_PUBLIC_PATHS=/swagger,/swagger/*
+            # - PEP_PROXY_AZF_PORT=8080
+            - PEP_PROXY_MAGIC_KEY=sco 
+        networks:
+            main:
+                ipv4_address: 172.40.0.10
+        restart: always
+
+
+    # # Autorización (AuthZForce)
+    # fiware-authzforce:
+    #     image: authzforce/server:release-8.0.0
+    #     container_name: fiware-authzforce
+    #     volumes:
+    #         - ./authzforce/domains:/opt/authzforce-ce-server/data/domains
+    #     networks:
+    #         main:
+    #             ipv4_address: 172.40.0.8
+    #     restart: always
+
+
+    # MySQL Database (base de datos de los componentes de seguridad)
+    mysql-db:
+        image: mysql:5.7
+        container_name: mysql-db
+        volumes:
+            - ./mysqldb:/var/lib/mysql
+        expose:
+            - 3306
+        environment:
+            - MYSQL_ROOT_PASSWORD=scopass
+        networks:
+            - mysql
+        restart: always
+
+
+###########################  NODE-RED ###########################
+    node-red:
+        image: nodered/node-red:latest
+        environment:
+            - TZ=Europe/Amsterdam
+        expose:
+            - "1880"
+        ports:
+            - "1880:1880"
+        networks:
+            node-red-net:
+                ipv4_address: 172.42.0.2
+
+        volumes:
+            - ../node-red-data:/data
+
+########################## BROKER MQTT ##########################
+    # Mosquitto broker
+    mosquitto:
+        image: eclipse-mosquitto:2.0.4
+        hostname: mosquitto
+        networks:
+            main:
+                ipv4_address: 172.40.0.3
+        expose:
+            - "1883"
+            - "9001"
+            - "8883"
+        ports:
+            - "1883:1883"
+            - "9001:9001"
+            - "8883:8883"
+        volumes:
+            - ../TLS/mosquitto/:/mosquitto/config/
+
+########################## AGENTES IOT ##########################
+    # Agente MQTT-NGSI - Ultralight payload
+    iot-agent:
+        image: telefonicaiot/iotagent-ul
+        container_name: iot-agent
+        hostname: iot-agent
+        depends_on:
+            - mongodb
+        expose:
+            # - "4041"
+             - "7896"
+        ports:
+            - "4041:4041"
+            - "7896:7896"
+        environment:
+            - "IOTA_CB_HOST=orion" 
+            - "IOTA_CB_PORT=1026" 
+            - "IOTA_NORTH_PORT=4041"
+            - "IOTA_REGISTRY_TYPE=mongodb"
+            - "IOTA_MONGO_HOST=mongodb"
+            - "IOTA_MONGO_PORT=27017"
+            - "IOTA_MONGO_DB=iotagent-ultralight"
+            - "IOTA_HTTP_PORT=7896"
+            - "IOTA_PROVIDER_URL=http://iot-agent:4041"
+            - "IOTA_MQTT_PROTOCOL=mqtt"
+            - "IOTA_MQTT_HOST=mosquitto"
+            - "IOTA_MQTT_PORT=8883"
+            - "IOTA_MQTT_CA=/ul/config/certs/ca.crt"            
+            - "IOTA_MQTT_CERT=/ul/config/certs/client2.crt"            
+            - "IOTA_MQTT_KEY=/ul/config/certs/client2.key"  
+            - "IOTA_MQTT_REJECT_UNAUTHORIZED=false" 
+            - "IOTA_MQTT_USERNAME=mqtt-agent"
+            - "IOTA_MQTT_PASSWORD=scopass"
+            - "IOTA_DEFAULT_RESOURCE="
+        volumes:
+            - ../TLS/mqtt-agent/certs:/ul/config/certs/
+        networks:
+            main:
+                ipv4_address: 172.40.0.15
+
+
+##################### COMPONENTES PLATAFORMA IOT #####################
+
+    # Gestor de contexto - Orión
+    fiware-orion:
+        image: fiware/orion:2.3.0
+        hostname: orion
+        container_name: fiware-orion
+        command: -dbhost mongodb -logLevel DEBUG -noCache # Indicate name of mongodb server
+        expose:
+            - "1026"
+        # ports:               
+        #    - "1026:1026"
+        depends_on:
+            - mongodb
+        healthcheck:
+            test: curl -f http://localhost:1026/version || exit 1
+            interval: 1m
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+        networks:
+            main:
+                ipv4_address: 172.40.0.2
+        restart: always
+
+    # MongoDB Database (base de datos de los componentes de FIWARE)
+    mongodb:
+        image: mongo:3.6
+        hostname: mongodb
+        container_name: db-mongo
+        volumes:
+            - ./mongodb:/data/db
+            - ./mongodump:/platform-dump
+        expose:
+            - "27017"
+        ports:
+            - "27017:27017"
+        networks:
+            main:
+                ipv4_address: 172.40.0.11
+        command: --bind_ip_all --smallfiles
+        restart: always
+
+
+    # Componentes extras de FIWARE (histórico y motor de reglas no se van a utilizar en esta práctica)
+    fiware-sth-comet:
+        image: telefonicaiot/fiware-sth-comet:2.7.0
+        hostname: fiware-sth-comet
+        container_name: fiware-sth
+        depends_on:
+            - mongodb
+        expose:
+            - "8666"
+        ports:
+            - "8666:8666"
+        environment:
+            - STH_HOST=0.0.0.0
+            - DB_URI=mongodb:27017
+        healthcheck:
+            test: curl -f http://localhost:8666/version || exit 1
+            interval: 1m
+            timeout: 10s
+            retries: 3
+            start_period: 40s
+        networks:
+            main:
+                ipv4_address: 172.40.0.4
+        restart: always
+
+    fiware-perseo-core:
+        image: fiware/perseo-core
+        container_name: fiware-perseo-core
+        environment:
+            - PERSEO_FE_URL=http://fiware-perseo-fe:9090
+            # - MAX_AGE=6000
+        networks:
+            - perseo
+        expose:
+            - "8080"
+        ports:
+            - "8080:8080"
+        restart: always
+    fiware-perseo-fe:
+        image: fiware/perseo:1.8.0
+        container_name: fiware-perseo-fe
+        depends_on:
+            - mongodb
+            - fiware-perseo-core
+            - fiware-orion
+        expose:
+            - "9090"
+        ports:
+            - "9090:9090"
+        environment:
+            - PERSEO_MONGO_ENDPOINT=mongodb:27017
+            - PERSEO_CORE_URL=http://fiware-perseo-core:8080
+            - PERSEO_LOG_LEVEL=debug
+            - PERSEO_ORION_URL=http://fiware-orion:1026
+        networks:
+            main:
+                ipv4_address: 172.40.0.5
+            perseo:
+        restart: always
+            
+
+networks:
+    main:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.40.0.0/16
+    perseo:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.41.0.0/24
+
+    mysql:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.43.0.40/29
+
+    node-red-net:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.42.0.0/16
+
+
+
