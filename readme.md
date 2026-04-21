@@ -32,6 +32,8 @@ The platform is composed of the following components:
 - **Client Application**  
   A simple Python interface designed to monitor system state and interact with the platform.
 
+![Project scheme image](https://github.com/Tentts/Hospital-Inventory-IoT/blob/master/project_scheme.png)
+
 ---
 
 ## ⚙️ Technologies Used
