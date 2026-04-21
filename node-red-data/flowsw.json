@@ -1,0 +1,621 @@
+[
+    {
+        "id": "7b3867af97f76128",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": true,
+        "info": ""
+    },
+    {
+        "id": "bbfb74eb5af6bcf8",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": true,
+        "info": ""
+    },
+    {
+        "id": "f5581297c0a359b5",
+        "type": "tab",
+        "label": "Flow 4",
+        "disabled": true,
+        "info": ""
+    },
+    {
+        "id": "8e31a9e65a89dfc7",
+        "type": "tab",
+        "label": "Sensor read",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d41786b1ce70cc78",
+        "type": "tab",
+        "label": "Actuator",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "9f3277857106810b",
+        "type": "tab",
+        "label": "Flow 5",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "978559026fc9a6d7",
+        "type": "mqtt-broker",
+        "name": "Server-with-user-pass",
+        "broker": "172.42.0.1",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d12e32d24dbc46f9",
+        "type": "mqtt-broker",
+        "name": "Broker-with-TLS",
+        "broker": "172.40.0.1",
+        "port": "8883",
+        "tls": "a4aedff9c52b9711",
+        "clientid": "",
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "a4aedff9c52b9711",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client1.crt",
+        "keyname": "client1.key",
+        "caname": "ca.crt",
+        "servername": "scovb",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "e961f72264f278a0",
+        "type": "mqtt-broker",
+        "name": "Basic server",
+        "broker": "172.42.0.1",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "d7fbc71009e01221",
+        "type": "Context-Broker",
+        "name": "OCB",
+        "endpoint": "http://172.40.0.1:1880",
+        "service": "openiot",
+        "idmEndpoint": ""
+    },
+    {
+        "id": "c8d97cc878ea3f54",
+        "type": "mqtt in",
+        "z": "7b3867af97f76128",
+        "name": "Basic server",
+        "topic": "sco/temp",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "e961f72264f278a0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "0f6377ee57e7611c"
+            ]
+        ]
+    },
+    {
+        "id": "0f6377ee57e7611c",
+        "type": "debug",
+        "z": "7b3867af97f76128",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "1ca9c98f42365c88",
+        "type": "mqtt out",
+        "z": "7b3867af97f76128",
+        "name": "",
+        "topic": "sco/temp",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "e961f72264f278a0",
+        "x": 420,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "42515eded43a957f",
+        "type": "inject",
+        "z": "7b3867af97f76128",
+        "name": "Sensor",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "22",
+        "payloadType": "num",
+        "x": 180,
+        "y": 460,
+        "wires": [
+            [
+                "1ca9c98f42365c88"
+            ]
+        ]
+    },
+    {
+        "id": "ad42915401e6ad92",
+        "type": "mqtt in",
+        "z": "bbfb74eb5af6bcf8",
+        "name": "User/pass",
+        "topic": "sco/temp",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "978559026fc9a6d7",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 240,
+        "y": 100,
+        "wires": [
+            [
+                "97875fbf07c17dfd"
+            ]
+        ]
+    },
+    {
+        "id": "97875fbf07c17dfd",
+        "type": "debug",
+        "z": "bbfb74eb5af6bcf8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "f75ce48b8878c8e2",
+        "type": "mqtt out",
+        "z": "bbfb74eb5af6bcf8",
+        "name": "",
+        "topic": "sco/temp",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "978559026fc9a6d7",
+        "x": 520,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c4de6649add5fd39",
+        "type": "inject",
+        "z": "bbfb74eb5af6bcf8",
+        "name": "Sensor",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "22",
+        "payloadType": "num",
+        "x": 250,
+        "y": 160,
+        "wires": [
+            [
+                "f75ce48b8878c8e2"
+            ]
+        ]
+    },
+    {
+        "id": "0d36889c672cfc2b",
+        "type": "mqtt in",
+        "z": "8e31a9e65a89dfc7",
+        "name": "TLS",
+        "topic": "/ABCD1234/temp002/attrs",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "d12e32d24dbc46f9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 190,
+        "y": 100,
+        "wires": [
+            [
+                "aa7bd0b473a583b5"
+            ]
+        ]
+    },
+    {
+        "id": "aa7bd0b473a583b5",
+        "type": "debug",
+        "z": "8e31a9e65a89dfc7",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "c31ce20c5d838455",
+        "type": "mqtt out",
+        "z": "8e31a9e65a89dfc7",
+        "name": "",
+        "topic": "/ABCD1234/temp001/attrs",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d12e32d24dbc46f9",
+        "x": 510,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "fca49ae9574a56c0",
+        "type": "inject",
+        "z": "8e31a9e65a89dfc7",
+        "name": "Sensor",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "t|22",
+        "payloadType": "str",
+        "x": 210,
+        "y": 200,
+        "wires": [
+            [
+                "c31ce20c5d838455"
+            ]
+        ]
+    },
+    {
+        "id": "60fe250b55579cf9",
+        "type": "http in",
+        "z": "f5581297c0a359b5",
+        "name": "Alarm listener",
+        "url": "/price-alarm",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 180,
+        "y": 180,
+        "wires": [
+            [
+                "0cd18c2df6921cee",
+                "82c99717a488384c"
+            ]
+        ]
+    },
+    {
+        "id": "0cd18c2df6921cee",
+        "type": "http response",
+        "z": "f5581297c0a359b5",
+        "name": "",
+        "statusCode": "200",
+        "headers": {},
+        "x": 380,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "82c99717a488384c",
+        "type": "debug",
+        "z": "f5581297c0a359b5",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "f4499295bc2ce739",
+        "type": "mqtt in",
+        "z": "9f3277857106810b",
+        "name": "",
+        "topic": "GameXtop/#",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "d12e32d24dbc46f9",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "b25504d453ec186d"
+            ]
+        ]
+    },
+    {
+        "id": "20c0e94ffc4a469d",
+        "type": "debug",
+        "z": "9f3277857106810b",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1070,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "37e6901ccfa1c316",
+        "type": "mqtt out",
+        "z": "9f3277857106810b",
+        "name": "",
+        "topic": "GameXtop/temp001",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d12e32d24dbc46f9",
+        "x": 800,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "648b73016ce06343",
+        "type": "inject",
+        "z": "9f3277857106810b",
+        "name": "Sensor",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "t|27",
+        "payloadType": "str",
+        "x": 510,
+        "y": 240,
+        "wires": [
+            [
+                "37e6901ccfa1c316"
+            ]
+        ]
+    },
+    {
+        "id": "153808d35b5808a7",
+        "type": "http request",
+        "z": "9f3277857106810b",
+        "name": "",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://172.40.0.1:1026/v2/op/update",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "authType": "",
+        "x": 890,
+        "y": 100,
+        "wires": [
+            [
+                "20c0e94ffc4a469d"
+            ]
+        ]
+    },
+    {
+        "id": "b25504d453ec186d",
+        "type": "function",
+        "z": "9f3277857106810b",
+        "name": "",
+        "func": "let topic = msg.topic.split(\"/\")\nlet entity = topic[1].slice(-3)\nlet payload = msg.payload.split(\"|\")\nmsg.payload=null;\n\nif (payload[0] == \"t\"){\n    msg={};\n    msg.payload = {\n        \"actionType\": \"append\",\n        \"entities\": [\n            {\n                \"id\":`urn:ngsi-ld:Store:${entity}`, \n                \"type\":\"Store\",\n                \"temp\":{\n                    \"type\": \"Integer\", \n                    \"value\": payload[1]\n                }\n            }\n        ]\n    };\n    \n    msg.headers = {\n        \"fiware-service\":\"openiot\",\n        \"fiware-servicepath\": \"/\",\n        \"Content-Type\": \"application/json\",\n        \"Content-Length\": JSON.stringify(msg.payload).length.toString()\n    }\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 100,
+        "wires": [
+            [
+                "153808d35b5808a7"
+            ]
+        ]
+    },
+    {
+        "id": "4c647164e542d876",
+        "type": "mqtt out",
+        "z": "8e31a9e65a89dfc7",
+        "name": "",
+        "topic": "/ABCD1234/temp002/attrs",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d12e32d24dbc46f9",
+        "x": 510,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "490bf272c6625f59",
+        "type": "inject",
+        "z": "8e31a9e65a89dfc7",
+        "name": "Sensor",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "t|23",
+        "payloadType": "str",
+        "x": 210,
+        "y": 260,
+        "wires": [
+            [
+                "4c647164e542d876"
+            ]
+        ]
+    },
+    {
+        "id": "c0aab8e4674e7a2d",
+        "type": "http in",
+        "z": "d41786b1ce70cc78",
+        "name": "",
+        "url": "/iot/lamp",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 270,
+        "y": 160,
+        "wires": [
+            [
+                "23f5acd2ab05e3a3"
+            ]
+        ]
+    },
+    {
+        "id": "23f5acd2ab05e3a3",
+        "type": "debug",
+        "z": "d41786b1ce70cc78",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 160,
+        "wires": []
+    }
+]

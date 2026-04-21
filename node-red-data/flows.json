@@ -1,0 +1,91 @@
+[
+    {
+        "id": "f068bd24ca9c0546",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "87217d30e5514934",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client1.crt",
+        "keyname": "client1.key",
+        "caname": "ca.crt",
+        "servername": "scovb",
+        "verifyservercert": false,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "53c6cf958f463544",
+        "type": "mqtt-broker",
+        "name": "MQTT-Broker-TLS",
+        "broker": "172.40.0.1",
+        "port": "8883",
+        "tls": "87217d30e5514934",
+        "clientid": "",
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "1b861f9e15e957d0",
+        "type": "Context-Broker",
+        "name": "Fiware",
+        "endpoint": "https://172.40.0.1:8050/v2/op/update",
+        "service": "openiot",
+        "idmEndpoint": "https://localhost:3443/idm"
+    },
+    {
+        "id": "eb20c1039294d7c3",
+        "type": "debug",
+        "z": "f068bd24ca9c0546",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "b1194c100c8647b1",
+        "type": "http in",
+        "z": "f068bd24ca9c0546",
+        "name": "AC",
+        "url": "/iot/AC",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 350,
+        "y": 360,
+        "wires": [
+            [
+                "eb20c1039294d7c3"
+            ]
+        ]
+    }
+]
