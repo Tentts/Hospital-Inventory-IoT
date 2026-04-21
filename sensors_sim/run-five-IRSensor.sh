@@ -1,0 +1,1 @@
+(trap 'kill 0' SIGINT; python3 sensorIRSensor.py IRSensor001 5 & python3 sensorIRSensor.py IRSensor002 5 & python3 sensorIRSensor.py IRSensor003 5 & python3 sensorIRSensor.py IRSensor004 5 & python3 sensorIRSensor.py IRSensor005 5)
